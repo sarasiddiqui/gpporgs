@@ -17,12 +17,21 @@ export class SidebarComponent implements OnInit {
   areaControl = this.fb.control(Area.ALL);
   checkedRegions: Set<number>;
   checkedSectors: Set<number>;
+  allRegions: Set<number>;
+  allSectors:Set<number>;
+  regionSize: any;
+  sectorSize: any;
+  
+
 
   constructor(private appService: AppService, private dialog: MatDialog, private fb: FormBuilder) {
     const filter = appService.filterValue();
     this.checkedRegions = new Set(filter.regions);
     this.checkedSectors = new Set(filter.sectors);
+    this.regionSize = this.checkedRegions.size;
+    this.sectorSize = this.checkedSectors.size;
   }
+
 
   ngOnInit() {
     this.areaControl.valueChanges.subscribe(() => this.updateArea());
@@ -64,6 +73,9 @@ export class SidebarComponent implements OnInit {
     filter.regions = new Set(this.checkedRegions);
     this.appService.updateFilter(filter);
   }
+
+  
+
 
   onSectorChange(id: number): void {
     if (this.checkedSectors.has(id)) {

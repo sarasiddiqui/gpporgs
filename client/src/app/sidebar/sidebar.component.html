@@ -14,15 +14,18 @@
 </p>
 <span class="mat-subheading-1">REGIONS</span>
 <p class="overflow-y" id="filter-regions">
+  <mat-checkbox color ="primary" fxLayout="row"> Select/Deselect All</mat-checkbox>
   <mat-checkbox color="primary" fxLayout="row"
                 *ngFor="let id of regions()"
                 [checked]="checkedRegions.has(id)"
                 (change)="onRegionChange(id)">
     {{ region(id) }}
   </mat-checkbox>
+  
 </p>
 <span class="mat-subheading-1">SECTORS</span>
 <p class="overflow-y" id="filter-sectors">
+  <mat-checkbox color ="primary" fxLayout="row"> Select/Deselect All</mat-checkbox>
   <mat-checkbox color="primary" fxLayout="row"
                 *ngFor="let id of sectors()"
                 [checked]="checkedSectors.has(id)"

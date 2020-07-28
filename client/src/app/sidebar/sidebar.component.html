@@ -14,22 +14,22 @@
 </p>
 <span class="mat-subheading-1">REGIONS</span>
 <p class="overflow-y" id="filter-regions">
-  <mat-checkbox color ="primary" fxLayout="row" [checked]="masterSelected" (change)="checkUncheckAll()" > Select / Deselect All</mat-checkbox>
+  <mat-checkbox color ="primary" fxLayout="row" [checked]="masterSelectedRegion" (change)="checkUncheckAllRegion()" > Select / Deselect All</mat-checkbox>
   <mat-checkbox color="primary" fxLayout="row"
                 *ngFor="let item of checklistRegion"
                 [checked]="item.isSelected"
-                (change)="isAllSelected(item.id)">
+                (change)="isAllSelectedRegion(item.id)">
     {{ item.value }}
   </mat-checkbox>
   
 </p>
 <span class="mat-subheading-1">SECTORS</span>
 <p class="overflow-y" id="filter-sectors">
-  <mat-checkbox color ="primary" fxLayout="row"> Select/Deselect All</mat-checkbox>
+  <mat-checkbox color ="primary" fxLayout="row" [checked]="masterSelectedSector" (change)="checkUncheckAllSector()" > Select / Deselect All</mat-checkbox>
   <mat-checkbox color="primary" fxLayout="row"
-                *ngFor="let id of sectors()"
-                [checked]="checkedSectors.has(id)"
-                (change)="onSectorChange(id)">
-    {{ sector(id).toLowerCase().startsWith('other') ? 'Other' : sector(id) }}
+                *ngFor="let item of checklistSector"
+                [checked]="item.isSelected"
+                (change)="isAllSelectedSector(item.id)">
+    {{ item.value }}
   </mat-checkbox>
 </p>

@@ -17,7 +17,8 @@ export class SidebarComponent implements OnInit {
   areaControl = this.fb.control(Area.ALL);
   checkedRegions: Set<number>;
   checkedSectors: Set<number>;
-  masterSelected: boolean;
+  masterSelectedRegion: boolean;
+  masterSelectedSector: boolean;
   checklistRegion:any;
   checklistSector:any;
   
@@ -27,7 +28,8 @@ export class SidebarComponent implements OnInit {
     const filter = appService.filterValue();
     this.checkedRegions = new Set(filter.regions);
     this.checkedSectors = new Set(filter.sectors);
-    this.masterSelected = true;
+    this.masterSelectedRegion = true;
+    this.masterSelectedSector = true;
     this.checklistRegion = [
       {id: 1, value: 'North America', isSelected: true},
       {id: 2, value: 'Mexico / Central America', isSelected: true},
@@ -39,16 +41,39 @@ export class SidebarComponent implements OnInit {
       {id: 8, value: 'India', isSelected: true},
       {id: 9, value: 'Other', isSelected: true},
     ]
+    this.checklistSector = [
+      {id: 1, value: 'Agriculture / Food Security', isSelected: true},
+      {id: 2, value: 'Collective Mobilization / Advocacy', isSelected: true},
+      {id: 3, value: 'Disaster / Humanitarian Relief', isSelected: true},
+      {id: 4, value: 'Education', isSelected: true},
+      {id: 5, value: 'Energy', isSelected: true},
+      {id: 6, value: 'Environment / Sustainability', isSelected: true},
+      {id: 7, value: 'Fair Trade / Market Access', isSelected: true},
+      {id: 8, value: 'Gender Empowerment', isSelected: true},
+      {id: 9, value: 'Health', isSelected: true},
+      {id: 10, value: 'Housing', isSelected: true},
+      {id: 11, value: 'Human Rights / Law', isSelected: true},
+      {id: 12, value: 'Hunger / Malnutrition', isSelected: true},
+      {id: 13, value: 'Law', isSelected: true},
+      {id: 14, value: 'Immigration', isSelected: true},
+      {id: 15, value: 'Information Technology', isSelected: true},
+      {id: 16, value: 'Microfinance', isSelected: true},
+      {id: 17, value: 'Refugee / Displaced Persons', isSelected: true},
+      {id: 18, value: 'Water / Sanitation', isSelected: true},
+      {id: 19, value: 'Other', isSelected: true},
+    ]
   }
-  checkUncheckAll() {
-    this.masterSelected = !this.masterSelected;
+  
+  checkUncheckAllRegion() {
+    this.masterSelectedRegion = !this.masterSelectedRegion;
     for (var i = 0; i < this.checklistRegion.length; i++) {
-      this.checklistRegion[i].isSelected = this.masterSelected;
+      this.checklistRegion[i].isSelected = this.masterSelectedRegion;
     }
-    this.getCheckedItemList();
+    this.onRegionChange();
   }
-  isAllSelected(id: number){
-    this.masterSelected = this.checklistRegion.every(function(item:any) {
+
+  isAllSelectedRegion(id: number){
+    this.masterSelectedRegion = this.checklistRegion.every(function(item:any) {
       return item.isSelected == false;
     })
     for(var i = 0; i < this.checklistRegion.length; i++){
@@ -60,9 +85,29 @@ export class SidebarComponent implements OnInit {
     this.onRegionChange();
   }
 
-  getCheckedItemList(){
-    this.onRegionChange();
+
+  checkUncheckAllSector() {
+    this.masterSelectedSector = !this.masterSelectedSector;
+    for (var i = 0; i < this.checklistSector.length; i++) {
+      this.checklistSector[i].isSelected = this.masterSelectedSector;
+    }
+    this.onSectorChange();
   }
+
+  isAllSelectedSector(id: number){
+    this.masterSelectedSector = this.checklistSector.every(function(item:any) {
+      return item.isSelected == false;
+    })
+    for(var i = 0; i < this.checklistSector.length; i++){
+      if(this.checklistSector[i].id == id){
+        this.checklistSector[i].isSelected = !this.checklistSector[i].isSelected;
+      }
+
+    }
+    this.onSectorChange();
+  }
+
+  
 
   ngOnInit() {
     this.areaControl.valueChanges.subscribe(() => this.updateArea());
@@ -111,13 +156,15 @@ export class SidebarComponent implements OnInit {
   
 
 
-  onSectorChange(id: number): void {
-    if (this.checkedSectors.has(id)) {
-      this.checkedSectors.delete(id);
+  onSectorChange(): void {
+  for(var i = 0; i < this.checklistSector.length; i++){
+    if (this.checklistSector[i].isSelected == false) {
+      this.checkedSectors.delete(this.checklistSector[i].id);
     } else {
-      this.checkedSectors.add(id);
+      this.checkedSectors.add(this.checklistSector[i].id);
     }
-    this.updateSectors();
+  }
+  this.updateSectors();
   }
 
   private updateSectors(): void {

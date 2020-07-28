@@ -73,15 +73,16 @@ export class SidebarComponent implements OnInit {
   }
 
   isAllSelectedRegion(id: number){
-    this.masterSelectedRegion = this.checklistRegion.every(function(item:any) {
-      return item.isSelected == false;
-    })
+    var totalSelected = 0;
     for(var i = 0; i < this.checklistRegion.length; i++){
       if(this.checklistRegion[i].id == id){
         this.checklistRegion[i].isSelected = !this.checklistRegion[i].isSelected;
       }
-
+      if(this.checklistRegion[i].isSelected == true){
+        totalSelected = totalSelected + 1;
+      }
     }
+    this.masterSelectedRegion = (totalSelected == 9);
     this.onRegionChange();
   }
 
@@ -95,15 +96,17 @@ export class SidebarComponent implements OnInit {
   }
 
   isAllSelectedSector(id: number){
-    this.masterSelectedSector = this.checklistSector.every(function(item:any) {
-      return item.isSelected == false;
-    })
+    var totalSelected = 0;
     for(var i = 0; i < this.checklistSector.length; i++){
       if(this.checklistSector[i].id == id){
         this.checklistSector[i].isSelected = !this.checklistSector[i].isSelected;
       }
+      if(this.checklistSector[i].isSelected == true){
+        totalSelected = totalSelected + 1;
+      }
 
     }
+    this.masterSelectedSector = (totalSelected == 19);
     this.onSectorChange();
   }
 

@@ -17,10 +17,9 @@ export class SidebarComponent implements OnInit {
   areaControl = this.fb.control(Area.ALL);
   checkedRegions: Set<number>;
   checkedSectors: Set<number>;
-  allRegions: Set<number>;
-  allSectors:Set<number>;
-  regionSize: any;
-  sectorSize: any;
+  masterSelected: boolean;
+  checklistRegion:any;
+  checklistSector:any;
   
 
 
@@ -28,10 +27,42 @@ export class SidebarComponent implements OnInit {
     const filter = appService.filterValue();
     this.checkedRegions = new Set(filter.regions);
     this.checkedSectors = new Set(filter.sectors);
-    this.regionSize = this.checkedRegions.size;
-    this.sectorSize = this.checkedSectors.size;
+    this.masterSelected = true;
+    this.checklistRegion = [
+      {id: 1, value: 'North America', isSelected: true},
+      {id: 2, value: 'Mexico / Central America', isSelected: true},
+      {id: 3, value: 'South America', isSelected: true},
+      {id: 4, value: 'Europe', isSelected: true},
+      {id: 5, value: 'Middle East / North Africa', isSelected: true},
+      {id: 6, value: 'Sub-Saharan Africa', isSelected: true},
+      {id: 7, value: 'China', isSelected: true},
+      {id: 8, value: 'India', isSelected: true},
+      {id: 9, value: 'Other', isSelected: true},
+    ]
+  }
+  checkUncheckAll() {
+    this.masterSelected = !this.masterSelected;
+    for (var i = 0; i < this.checklistRegion.length; i++) {
+      this.checklistRegion[i].isSelected = this.masterSelected;
+    }
+    this.getCheckedItemList();
+  }
+  isAllSelected(id: number){
+    this.masterSelected = this.checklistRegion.every(function(item:any) {
+      return item.isSelected == false;
+    })
+    for(var i = 0; i < this.checklistRegion.length; i++){
+      if(this.checklistRegion[i].id == id){
+        this.checklistRegion[i].isSelected = !this.checklistRegion[i].isSelected;
+      }
+
+    }
+    this.onRegionChange();
   }
 
+  getCheckedItemList(){
+    this.onRegionChange();
+  }
 
   ngOnInit() {
     this.areaControl.valueChanges.subscribe(() => this.updateArea());
@@ -63,12 +94,15 @@ export class SidebarComponent implements OnInit {
     this.appService.updateFilter(filter);
   }
 
-  onRegionChange(id: number): void {
-    if (this.checkedRegions.has(id)) {
-      this.checkedRegions.delete(id);
-    } else {
-      this.checkedRegions.add(id);
+  onRegionChange(): void {
+    for(var i = 0; i < this.checklistRegion.length; i++){
+      if (this.checklistRegion[i].isSelected == false) {
+        this.checkedRegions.delete(this.checklistRegion[i].id);
+      } else {
+        this.checkedRegions.add(this.checklistRegion[i].id);
+      }
     }
+    
     const filter = this.appService.filterValue();
     filter.regions = new Set(this.checkedRegions);
     this.appService.updateFilter(filter);

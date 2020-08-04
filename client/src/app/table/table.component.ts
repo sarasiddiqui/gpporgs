@@ -19,7 +19,7 @@ export class TableComponent implements OnInit {
   private filter: Observable<Filter>;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(private appService: AppService, private dialog: MatDialog) {
     this.filter = this.appService.filterState();
@@ -35,6 +35,7 @@ export class TableComponent implements OnInit {
       this.dataSource.sort = this.sort;
     });
     this.filter.subscribe(() => this._filter());
+    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
   type(organization: Organization): string {

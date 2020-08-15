@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppService } from '../app.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Area } from '../model/area';
 import { FormBuilder } from '@angular/forms';
 import { LookUpComponent } from '../look-up/look-up.component';
+import { TableComponent } from '../table/table.component'
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-
+ 
 export class SidebarComponent implements OnInit {
 
   area = Area;
@@ -21,10 +22,14 @@ export class SidebarComponent implements OnInit {
   masterSelectedSector: boolean;
   checklistRegion:any;
   checklistSector:any;
+
+
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  
   
 
-
-  constructor(private appService: AppService, private dialog: MatDialog, private fb: FormBuilder) {
+constructor(private appService: AppService, private dialog: MatDialog, private fb: FormBuilder) {
     const filter = appService.filterValue();
     this.checkedRegions = new Set(filter.regions);
     this.checkedSectors = new Set(filter.sectors);
@@ -70,7 +75,9 @@ export class SidebarComponent implements OnInit {
       this.checklistRegion[i].isSelected = this.masterSelectedRegion;
     }
     this.onRegionChange();
+
   }
+  
 
   isAllSelectedRegion(id: number){
     var totalSelected = 0;
@@ -84,6 +91,7 @@ export class SidebarComponent implements OnInit {
     }
     this.masterSelectedRegion = (totalSelected == 9);
     this.onRegionChange();
+  
   }
 
 
@@ -93,6 +101,7 @@ export class SidebarComponent implements OnInit {
       this.checklistSector[i].isSelected = this.masterSelectedSector;
     }
     this.onSectorChange();
+ 
   }
 
   isAllSelectedSector(id: number){
@@ -140,6 +149,7 @@ export class SidebarComponent implements OnInit {
     const filter = this.appService.filterValue();
     filter.area = this.areaControl.value;
     this.appService.updateFilter(filter);
+    
   }
 
   onRegionChange(): void {
@@ -176,6 +186,7 @@ export class SidebarComponent implements OnInit {
     this.appService.updateFilter(filter);
   }
 
+
   openLookUpDialog(): void {
     const query = '{ organizations { id name address { country }} }';
     this.appService.queryService(query).subscribe(data => {
@@ -185,4 +196,6 @@ export class SidebarComponent implements OnInit {
       });
     });
   }
+
+  
 }

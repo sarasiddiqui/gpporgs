@@ -6,6 +6,7 @@ import { Filter } from '../model/filter';
 import { Organization } from '../model/organization';
 import { MainModalComponent } from '../main-modal/main-modal.component';
 
+
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -18,7 +19,7 @@ export class TableComponent implements OnInit {
   organizations: Organization[] = [];
   private filter: Observable<Filter>;
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(private appService: AppService, private dialog: MatDialog) {
@@ -33,10 +34,16 @@ export class TableComponent implements OnInit {
       this.organizations = data.organizations.map(organization => new Organization(organization));
       this.dataSource = new MatTableDataSource<Organization>(this.organizations);
       this.dataSource.sort = this.sort;
+      setTimeout(() => this.dataSource.paginator = this.paginator);
     });
     this.filter.subscribe(() => this._filter());
-    setTimeout(() => this.dataSource.paginator = this.paginator);
+    
+  
   }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator
+}
+
 
   type(organization: Organization): string {
     if (organization.type === this.appService.types.size) {
